@@ -7,12 +7,14 @@ app.use(express.json());
 
 app.get("/health", (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
 
+const getClientIp = (req) =>
+  req.headers["x-forwarded-for"]?.split(",")[0].trim() ||
+  req.socket.remoteAddress;
+
 app.get("/hello", (req, res) => {
-  const name = req.query.name ?? "world";
-
-  console.log('hhhhhhhhhhhhhhhhhhh')
+  console.log("client ip:", getClientIp(req));
+  res.json({ ok: true });
 });
-
 app.post("/echo", (req, res) => res.json({ received: req.body }));
 
 const port = process.env.PORT || 3000;
